@@ -1,6 +1,8 @@
 /// @description Insert description here
 // You can write your code in this editor
 
+var _btn_br = false;
+
 draw_set_color(c_white);
 // draw_set_font();
 
@@ -73,14 +75,17 @@ if(global.gp_active > 0) {
 	draw_text(_width - 16, lt + (lh * 17), "Gamepad Right Stick H = " + string_format(gamepad_axis_value(global.gp_map[padsel], gp_axisrh), 1, 4));
 	draw_text(_width - 16, lt + (lh * 18), "Gamepad Right Stick V = " + string_format(gamepad_axis_value(global.gp_map[padsel], gp_axisrv), 1, 4));
 	draw_text(_width - 16, lt + (lh * 19), "Gamepad Right Stick Btn = " + string(gamepad_button_check(global.gp_map[padsel], gp_stickr)));
-	if(global.gp_active > 0) {
+
+	if(global.gp_active > 1) {
 		var _mouse_click = false;
 		var _mouse_down = false;
-		if( (mouse_x > (_width - (128 + 16))) &&
-			(mouse_y > (_height - (32 + 16))) && 
-			(mouse_x < (_width - 16)) &&
-			(mouse_y < (_height - 16))
+		var _mouse_over = false;
+		if( (mouse_x > (_width / 2) - (128)) &&
+			(mouse_y > 4) && 
+			(mouse_x < (_width / 2) + (128)) &&
+			(mouse_y < 52)
 			) {
+				_mouse_over = true;
 				if(mouse_check_button_pressed(mb_left)) {
 					_mouse_click = true;
 				}
@@ -88,16 +93,20 @@ if(global.gp_active > 0) {
 					_mouse_down = true;
 				}
 			}
-	show_debug_message(string(_width) + " x " + string(_height));
-		draw_set_color(c_gray);
-		draw_button(_width - (256 + 16), _height - (40 + 16), 
-					_width - 16, _height - 16, _mouse_down);
+		if(_mouse_over) {
+			draw_set_color(c_blue);
+		} else {
+			draw_set_color(c_gray);
+		}
+		draw_button((_width / 2) - (128), 4, 
+					(_width / 2) + (128), 52, _mouse_down);
 		if(_mouse_click) {
 			change_pad();
 		}
 		draw_set_color(c_black);
 		draw_set_halign(fa_left);
-		draw_text(_width - (240 + 16), _height - (26 + 32), "Change Pad");
+		var _tw = string_width("Change Pad");
+		draw_text((_width / 2) - (128) + ((256 - _tw) / 2), 8, "Change Pad");
 	}
 } else {
 		draw_text(16, 364, "No Gamepads");

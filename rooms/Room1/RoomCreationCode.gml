@@ -4,6 +4,7 @@ dh = display_get_height();
 
 room_width = dw;
 room_height = dh;
+camera_set_view_size(camera_get_default(), dw, dh);
 
 vw = dw;
 vh = dh;
