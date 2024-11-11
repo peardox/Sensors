@@ -34,6 +34,26 @@ draw_text(16, lt + (lh * 16), "Tilt Z = " + string_format(device_get_tilt_z(), 1
 draw_text(16, lt + (lh * 17), "Mouse X = " + string_format(device_mouse_x(0), 5, 1));
 draw_text(16, lt + (lh * 18), "Mouse Y = " + string_format(device_mouse_y(0), 5, 1));
 
+if(mouse_check_button(mb_left)) {
+	draw_text(16, lt + (lh * 19), "Mouse Left = Pressed");
+} else {
+	draw_text(16, lt + (lh * 19), "Mouse Left = Released");
+}
+if(mouse_check_button(mb_right)) {
+	draw_text(16, lt + (lh * 20), "Mouse Right = Pressed");
+} else {
+	draw_text(16, lt + (lh * 20), "Mouse Right = Released");
+}
+if(mouse_check_button(mb_middle)) {
+	draw_text(16, lt + (lh * 21), "Mouse Middle = Pressed");
+} else {
+	draw_text(16, lt + (lh * 21), "Mouse Middle = Released");
+}
+			
+if(keyboard_key) {
+draw_text(16, lt + (lh * 25), "Key = " + string_format(keyboard_key, 5, 0));
+}
+
 var _width = display_get_width();
 var _height = display_get_height();
 
@@ -41,9 +61,27 @@ if(global.gp_active > 0) {
 	if(!((padsel >= 0) && (padsel < global.gp_active))) {
 		padsel = 0;
 	}
-	draw_text(16, lt + (lh * 19), "Gamepad Count = " + string_format(global.gp_active, 1, 0) + " ( " + string(global.gp_map[padsel]) + ")");
-	draw_text(16, lt + (lh * 20), "Gamepad GUID = " + gamepad_get_guid(global.gp_map[padsel]));
-	draw_text(16, lt + (lh * 21), "Gamepad Description = " + gamepad_get_description(global.gp_map[padsel]));
+
+	var _siri = string_pos("Siri Remote", gamepad_get_description(global.gp_map[padsel]));
+
+	if ((os_type == os_tvos)  && (string_pos("Siri Remote", gamepad_get_description(global.gp_map[padsel]))<>0)) {
+	    gamepad_set_option(global.gp_active, "dpad_absolute",true);
+		if gamepad_get_option(global.gp_active, "allow_rotation") {
+			draw_text(16, lt + (lh * 26), "Remote = allow_rotation = TRUE");
+		} else {
+			draw_text(16, lt + (lh * 26), "Remote = allow_rotation = FALSE");
+		}
+		if gamepad_get_option(global.gp_active, "dpad_absolute") {
+			draw_text(16, lt + (lh * 27), "Remote = dpad_absolute = TRUE");
+		} else {
+			draw_text(16, lt + (lh * 27), "Remote = dpad_absolute = FALSE");
+		}
+	
+	}
+
+	draw_text(16, lt + (lh * 22), "Gamepad Count = " + string_format(global.gp_active, 1, 0) + " ( " + string(global.gp_map[padsel]) + ")");
+	draw_text(16, lt + (lh * 23), "Gamepad GUID = " + gamepad_get_guid(global.gp_map[padsel]));
+	draw_text(16, lt + (lh * 24), "Gamepad Description = " + gamepad_get_description(global.gp_map[padsel]));
 	
 	draw_set_halign(fa_right);
 
@@ -80,6 +118,7 @@ if(global.gp_active > 0) {
 		var _mouse_click = false;
 		var _mouse_down = false;
 		var _mouse_over = false;
+/*
 		if( (mouse_x > (_width / 2) - (128)) &&
 			(mouse_y > 4) && 
 			(mouse_x < (_width / 2) + (128)) &&
@@ -103,6 +142,7 @@ if(global.gp_active > 0) {
 		if(_mouse_click) {
 			change_pad();
 		}
+*/
 		draw_set_color(c_black);
 		draw_set_halign(fa_left);
 		var _tw = string_width("Change Pad");
